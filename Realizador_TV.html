@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Realizador TV</title>
+    <style media="screen">
+      #ReprodPrincipal{
+        position: absolute;
+        width: 550;
+        left: 50%;
+        border-width: thick;
+		    border-style: outset;
+		    border-color: red;
+      }
+      #ReprodSecundarios{
+        text-align: left;
+        width: 350;
+      }
+      #ReprodSecundarios2{
+        text-align: left;
+        width: 350;
+      }
+      #ReprodSecundarios3{
+        text-align: left;
+        width: 350;
+      }
+      #EstiloBucle{
+        position: absolute;
+        left: 50%;
+        top: 75%;
+      }
+    </style>
+  </head>
+  <body>
+
+    <video id="ReprodPrincipal" autoplay loop style="width: 550px">
+      <source id="mp4_src" src="rain.mp4" type="video/mp4">
+      <source id="ogg_src" src="rain.ogg" type="video/ogg">
+      Your browser does not support HTML5 video.
+    </video>
+
+    <script>
+      function bucle(){
+        var inicio =  prompt("INICIO:", "0");
+        var fin =  prompt("FIN:", "0");
+        var nveces = prompt("NUMERO DE VECES", "0");
+        var n = 0;
+        var videoPrincipal = document.getElementById("ReprodPrincipal");
+        videoPrincipal.currentTime= Number(inicio);
+        videoPrincipal.play();
+        var c = setInterval(function(){
+          if(videoPrincipal.currentTime >= Number(fin)){
+            videoPrincipal.currentTime= Number(inicio);
+            n++; console.log(n);
+          }
+          if(n == Number(nveces)){clearInterval(c);}
+        }, 1000)
+      }
+    </script>
+    <div id="EstiloBucle">
+      <input type="submit" value="Bucle" onclick="bucle(this)">
+    </div >
+
+    <!-- VIDEO 1 -->
+
+    <script>
+      function CambioVideo()  {
+          var retomar = 0.0;
+          var x = document.getElementById("ReprodSecundarios");
+          var z = document.getElementById("ReprodPrincipal");
+          document.getElementById("mp4_src").src = "mov_bbb.mp4";
+          document.getElementById("ogg_src").src = "mov_bbb.ogg";
+          document.getElementById("ReprodPrincipal").load();
+          retomar = x.currentTime;
+          z.currentTime = retomar;
+      }
+    </script>
+
+    <script>
+      function desMutear() {
+        var x = document.getElementById("ReprodSecundarios");
+        x.muted = false;
+      }
+      function volverMutear() {
+        var x = document.getElementById("ReprodSecundarios");
+        x.muted = true;
+      }
+    </script>
+
+    <button onclick="CambioVideo()" onmouseover="desMutear()" onmouseout="volverMutear()">
+      <video id="ReprodSecundarios" autoplay loop muted>
+        <source id="mp4_src" src="mov_bbb.mp4" type="video/mp4">
+        <source id="ogg_src" src="mov_bbb.ogg" type="video/ogg">
+        Your browser does not support HTML5 video.
+      </video>
+    </button>
+
+    <br></br>
+
+    <!-- VIDEO 2 -->
+
+    <script>
+      function CambioVideo2() {
+        var retomar = 0.0;
+        var x = document.getElementById("ReprodSecundarios2");
+        var z = document.getElementById("ReprodPrincipal");
+        document.getElementById("mp4_src").src = "rain.mp4";
+        document.getElementById("ogg_src").src = "rain.ogg";
+        document.getElementById("ReprodPrincipal").load();
+        retomar = x.currentTime;
+        z.currentTime = retomar;
+      }
+    </script>
+
+    <script>
+      function desMutear2() {
+        var x = document.getElementById("ReprodSecundarios2");
+        x.muted = false;
+      }
+      function volverMutear2() {
+        var x = document.getElementById("ReprodSecundarios2");
+        x.muted = true;
+      }
+    </script>
+
+    <button onclick="CambioVideo2()" onmouseover="desMutear2()" onmouseout="volverMutear2()">
+      <video id="ReprodSecundarios2" autoplay loop muted style="width: 350px">
+        <source id="mp4_src" src="rain.mp4" type="video/mp4">
+        <source id="ogg_src" src="rain.ogg" type="video/ogg">
+        Your browser does not support HTML5 video.
+      </video>
+    </button>
+    <br></br>
+
+    <!-- VIDEO 3 -->
+
+    <script>
+      function CambioVideo3() {
+        var retomar = 0.0;
+        var x = document.getElementById("ReprodSecundarios3");
+        var z = document.getElementById("ReprodPrincipal");
+        document.getElementById("mp4_src").src = "movie.mp4";
+        document.getElementById("ogg_src").src = "movie.ogg";
+        document.getElementById("ReprodPrincipal").load();
+        retomar = x.currentTime;
+        z.currentTime = retomar;
+      }
+    </script>
+
+    <script>
+      function desMutear3() {
+        var x = document.getElementById("ReprodSecundarios3");
+        x.muted = false;
+      }
+      function volverMutear3() {
+        var x = document.getElementById("ReprodSecundarios3");
+        x.muted = true;
+      }
+    </script>
+
+    <button onclick="CambioVideo3()" onmouseover="desMutear3()" onmouseout="volverMutear3()">
+      <video id="ReprodSecundarios3" autoplay loop muted>
+        <source id="mp4_src" src="movie.mp4" type="video/mp4">
+        <source id="ogg_src" src="movie.ogg" type="video/ogg">
+        Your browser does not support HTML5 video.
+      </video>
+    </button>
+
+  </body>
+</html>

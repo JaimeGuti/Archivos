@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Puzzle</title>
+    <style>
+      .picture {
+        border: 1px solid black;
+      }
+      </style>
+  </head>
+  <body style="background: gray;">
+
+    <input id="tamaño" value="3" style="border: transparent; color: transparent; background:transparent">
+    <!-- Al cambiar el valor de value se modifica el número de piezas del puzzle -->
+
+    <div id="main" class="main">
+      <p>
+        <img src="urjc.jpg" width="160" height="160" style="text-align:center">
+      </p>
+      <canvas id="puzzle" width="480px" height="480px"></canvas>
+    </div>
+
+    <script type="text/javascript">
+      var context = document.getElementById('puzzle').getContext('2d');
+                                                      //DIBUJA EN EL TABLERO
+      var img = new Image();
+      //Imagenes de 480x480
+      img.src = 'urjc.jpg';
+      img.addEventListener('load', fichas, false); //GARANTIZA QUE LA IMG SE TERMINE DE CARGAR
+
+      var tamañoTablero = document.getElementById('puzzle').width;
+      var contadorFicha = document.getElementById('tamaño').value;
+
+      var tamañoFichas = tamañoTablero / contadorFicha;
+
+      var clickeado = new Object;
+      clickeado.x = 0;
+      clickeado.y = 0;
+
+      var espacioVacio = new Object;
+      espacioVacio.x = 0;
+      espacioVacio.y = 0;
+
+      var resuelto = false;
+
+      var partesTablero;
+      Tablero();
+
+      function Tablero() {
+        partesTablero = new Array(contadorFicha);
+        for (var i = 0; i < contadorFicha; ++i) {
+          partesTablero[i] = new Array(contadorFicha);
+          for (var j = 0; j < contadorFicha; ++j) {
+            partesTablero[i][j] = new Object;
+            partesTablero[i][j].x = (contadorFicha - 1) - i;
+            partesTablero[i][j].y = (contadorFicha - 1) - j;
+          }
+        }
+        espacioVacio.x = partesTablero[contadorFicha - 1][contadorFicha - 1].x;
+        espacioVacio.y = partesTablero[contadorFicha - 1][contadorFicha - 1].y;
+        resuelto = false;
+      }
+
+      document.getElementById('tamaño').onchange = function() { //RECALCULA LAS FICHAS
+        contadorFicha = this.value;
+        tamañoFichas = tamañoTablero / contadorFicha;
+        Tablero();
+        fichas();
+      };
+
+      document.getElementById('puzzle').onclick = function(e) {
+        clickeado.x = Math.floor((e.pageX - this.offsetLeft) / tamañoFichas);
+        clickeado.y = Math.floor((e.pageY - this.offsetTop) / tamañoFichas);
+        if (distancia(clickeado.x, clickeado.y, espacioVacio.x, espacioVacio.y) == 1) {
+          moverFicha(espacioVacio, clickeado);
+          fichas();
+        }
+      };
+
+      function fichas() {
+        context.clearRect ( 0 , 0 , tamañoTablero , tamañoTablero );
+        for (var i = 0; i < contadorFicha; ++i) {
+          for (var j = 0; j < contadorFicha; ++j) {
+            var x = partesTablero[i][j].x;
+            var y = partesTablero[i][j].y;
+            if(i != espacioVacio.x || j != espacioVacio.y || resuelto == true) {
+              context.drawImage(img, x * tamañoFichas, y * tamañoFichas, tamañoFichas, tamañoFichas,
+                  i * tamañoFichas, j * tamañoFichas, tamañoFichas, tamañoFichas);
+            }
+          }
+        }
+      }
+
+      function distancia(x1, y1, x2, y2) { //PARA SABER SI ESTÁ AL LADO DEL VACÍO
+        return Math.abs(x1 - x2) + Math.abs(y1 - y2);
+      }
+
+      function moverFicha(toLoc, fromLoc) {
+        if (!resuelto) {
+          partesTablero[toLoc.x][toLoc.y].x = partesTablero[fromLoc.x][fromLoc.y].x;
+          partesTablero[toLoc.x][toLoc.y].y = partesTablero[fromLoc.x][fromLoc.y].y;
+          partesTablero[fromLoc.x][fromLoc.y].x = contadorFicha - 1;
+          partesTablero[fromLoc.x][fromLoc.y].y = contadorFicha - 1;
+          toLoc.x = fromLoc.x;
+          toLoc.y = fromLoc.y;
+          comprobarResuelto();
+        }
+      }
+
+      function comprobarResuelto() {
+        var flag = true;
+        for (var i = 0; i < contadorFicha; ++i) {
+          for (var j = 0; j < contadorFicha; ++j) {
+            if (partesTablero[i][j].x != i || partesTablero[i][j].y != j) {
+              flag = false;
+            }
+          }
+        }
+        resuelto = flag;
+        if(flag==true){
+          //setTimeout(function() {alert("Tiempo: " + duracion + " segundos");});
+          setTimeout(function(){stop()});
+          setTimeout(function(){reiniciar()});
+        }
+      }
+
+      var context = document.getElementById('puzzle').getContext('2d');
+
+
+    </script>
+
+    <script>
+      var cronos;
+      var duracion;
+      function iniciar() {
+        cronos = setInterval(function() { cronometro() }, 1000);
+      }
+      function cronometro() {
+        duracion = parseInt(document.getElementById('tiempo').value);
+        document.getElementById('tiempo').value = eval(duracion + 1);
+      }
+
+      //function reiniciar() {
+      //  duracion = parseInt(document.getElementById('tiempo').value);
+      //  document.getElementById('tiempo').value = "0";
+      //} AL ACTIVAR ESTA OPCIÓN HAY QUE ACTIVAR EL ALERT(UNAS LÍNEAS MÁS ARRIBA)
+
+      function stop() {
+        clearInterval(cronos);
+      }
+      setTimeout(function(){iniciar()});
+
+    </script>
+
+    <body>
+      <b>
+        <p>
+          Tiempo: <input id="tiempo" name="tiempo" value="0" size="1" maxlength="3" style="border:solid transparent;text-align: center; background:transparent"> segundos
+        </p>
+      </b>
+    </body>
+
+</html>
